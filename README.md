@@ -88,25 +88,10 @@ Configure each API family independently. `auto` picks the first group with both 
 | `VLM_ANTHROPIC_VERSION` | `anthropic-version` header (Anthropic only) | `2023-06-01` |
 | `VLM_LOG_PATH` | Custom log file path | `~/.vlm/vlm-mcp-YYYY-MM-DD.log` |
 
-### Legacy variables (Z.AI / Zhipu)
-
-Backward-compatible with `@z_ai/mcp-server`. Used as fallback when `VLM_*` is unset.
-
-| Variable | Description |
-|----------|-------------|
-| `Z_AI_API_KEY` / `ZAI_API_KEY` | API key |
-| `Z_AI_BASE_URL` | API root |
-| `Z_AI_MODE` / `PLATFORM_MODE` | `ZAI` → `https://api.z.ai/api/paas/v4/`, `ZHIPU` → `https://open.bigmodel.cn/api/paas/v4/` |
-| `Z_AI_VISION_MODEL` | Model name |
-| `Z_AI_VISION_MODEL_TEMPERATURE` / `_TOP_P` / `_MAX_TOKENS` | Sampling params |
-| `Z_AI_TIMEOUT` / `Z_AI_RETRY_COUNT` | Timeout / retries |
-| `ANTHROPIC_AUTH_TOKEN` | Fallback key if no other key is set |
-
 ### Provider auto-detection
 
 In `auto` mode (when no `OPENAI_*` group is set), the provider is inferred as follows:
 
-- Built-in Z.AI / Zhipu platform mode (`Z_AI_MODE=ZAI|ZHIPU`) → `chat-completions`
 - Base URL contains `anthropic`, or key starts with `sk-ant` → `anthropic`
 - Otherwise → `chat-completions` (the most broadly compatible default)
 
@@ -163,7 +148,7 @@ src/
 ├── index.ts                  # Entry point: starts the MCP server, registers all tools
 ├── types/                    # Error types (McpError, ApiError, ValidationError, …)
 ├── core/
-│   ├── environment.ts        # Env config (generic VLM_* + legacy Z_AI_*), URL resolution
+│   ├── environment.ts        # Env config (VLM_* + OPENAI_* groups), URL resolution
 │   ├── chat-service.ts       # Delegates to the active VisionProvider
 │   ├── file-service.ts       # File validation + base64 encoding (image/video)
 │   ├── base-image-service.ts # Shared image-processing logic for all image tools

@@ -11,8 +11,7 @@ import { configurationService } from '../core/environment.js';
  * Selection order (first match wins):
  *   1. VLM_PROVIDER env var, one of:
  *        chat-completions | responses | anthropic | auto
- *   2. Built-in Z.AI / Zhipu mode (Z_AI_MODE / PLATFORM_MODE) -> chat-completions
- *   3. auto: infer from the configured base URL / API key prefix
+ *   2. auto: infer from the configured base URL / API key prefix
  */
 export function createVisionProvider(): VisionProvider {
     const config = configurationService.getConfig();
@@ -42,14 +41,9 @@ export function createVisionProvider(): VisionProvider {
 /** Infer the provider family from base URL / key shape when in auto mode. */
 function inferProvider(): VisionProvider {
     const config = configurationService.getConfig();
-    const baseUrl = (config.VLM_BASE_URL || config.Z_AI_BASE_URL || '').toLowerCase();
-    const apiKey = config.VLM_API_KEY || config.Z_AI_API_KEY || '';
+    const baseUrl = config.VLM_BASE_URL.toLowerCase();
+    const apiKey = config.VLM_API_KEY || '';
 
-    // Built-in Z.AI / Zhipu platforms use Chat Completions
-    const platformMode = config.PLATFORM_MODE;
-    if (platformMode === 'ZAI' || platformMode === 'ZHIPU') {
-        return new ChatCompletionsProvider();
-    }
     if (baseUrl.includes('anthropic') || apiKey.toLowerCase().startsWith('sk-ant')) {
         return new AnthropicProvider();
     }

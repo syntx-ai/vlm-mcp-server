@@ -8,7 +8,7 @@ import { loadDotEnv } from './utils/dotenv.js';
 import { getVisionProvider } from './providers/index.js';
 // Setup console redirection BEFORE any other code to prevent stdout pollution
 setupConsoleRedirection();
-// Load .env from CWD so provider config (OPENAI_*, VLM_*, Z_AI_*) is picked up
+// Load .env from CWD so provider config (OPENAI_*, VLM_*) is picked up
 // without requiring the user to source the file. Real env vars take precedence.
 loadDotEnv();
 // Import tool registration functions
@@ -132,7 +132,6 @@ class McpServerApplication {
             await this.server.connect(transport);
             console.info('MCP Server started successfully', {
                 provider: getVisionProvider().kind,
-                mode: configurationService.getPlatformMode(),
                 name: configurationService.getServerConfig().name,
                 version: configurationService.getServerConfig().version
             });

@@ -88,25 +88,10 @@ claude mcp add -s user vlm-mcp-server \
 | `VLM_ANTHROPIC_VERSION` | `anthropic-version` 头（仅 Anthropic） | `2023-06-01` |
 | `VLM_LOG_PATH` | 自定义日志文件路径 | `~/.vlm/vlm-mcp-YYYY-MM-DD.log` |
 
-### 旧版变量（Z.AI / 智谱）
-
-与 `@z_ai/mcp-server` 向后兼容。当 `VLM_*` 未设置时作为兜底使用。
-
-| 变量 | 说明 |
-|------|------|
-| `Z_AI_API_KEY` / `ZAI_API_KEY` | API Key |
-| `Z_AI_BASE_URL` | API 根地址 |
-| `Z_AI_MODE` / `PLATFORM_MODE` | `ZAI` → `https://api.z.ai/api/paas/v4/`，`ZHIPU` → `https://open.bigmodel.cn/api/paas/v4/` |
-| `Z_AI_VISION_MODEL` | 模型名 |
-| `Z_AI_VISION_MODEL_TEMPERATURE` / `_TOP_P` / `_MAX_TOKENS` | 采样参数 |
-| `Z_AI_TIMEOUT` / `Z_AI_RETRY_COUNT` | 超时 / 重试 |
-| `ANTHROPIC_AUTH_TOKEN` | 未设其他 Key 时的兜底 Key |
-
 ### 提供商自动检测
 
 在 `auto` 模式下（未设置任何 `OPENAI_*` 组时），提供商按以下规则推断：
 
-- 内置 Z.AI / 智谱平台模式（`Z_AI_MODE=ZAI|ZHIPU`）→ `chat-completions`
 - Base URL 包含 `anthropic`，或 Key 以 `sk-ant` 开头 → `anthropic`
 - 否则 → `chat-completions`（兼容性最广的默认值）
 
@@ -163,7 +148,7 @@ src/
 ├── index.ts                  # 入口：启动 MCP 服务器，注册所有工具
 ├── types/                    # 错误类型（McpError、ApiError、ValidationError 等）
 ├── core/
-│   ├── environment.ts        # 环境配置（通用 VLM_* + 旧版 Z_AI_*）、URL 解析
+│   ├── environment.ts        # 环境配置（VLM_* + OPENAI_* 组）、URL 解析
 │   ├── chat-service.ts       # 委托给当前 VisionProvider
 │   ├── file-service.ts       # 文件校验 + base64 编码（图像/视频）
 │   ├── base-image-service.ts # 所有图像工具共享的图像处理逻辑

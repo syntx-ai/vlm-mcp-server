@@ -107,10 +107,10 @@ export const logger = new Logger();
 export function setupConsoleRedirection() {
     const originalConsole = { ...console };
     // Cross-platform log file path:
-    // - If env VLM_LOG_PATH / ZAI_MCP_LOG_PATH is set, use it
+    // - If env VLM_LOG_PATH is set, use it
     // - Otherwise use user home directory: ~/.vlm/vlm-mcp-YYYY-MM-DD.log
     const resolveLogFilePath = () => {
-        const envPath = process.env.VLM_LOG_PATH || process.env.ZAI_MCP_LOG_PATH;
+        const envPath = process.env.VLM_LOG_PATH;
         if (envPath && envPath.trim().length > 0) {
             return path.resolve(envPath);
         }
