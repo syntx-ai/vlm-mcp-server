@@ -17,6 +17,8 @@
     "build": "tsc && chmod 755 build/index.js",
     "start": "node build/index.js",
     "dev": "ts-node --esm src/index.ts",
+    "test": "npm run build && node --test test/*.test.js",
+    "test:coverage": "npm run build && node --test --experimental-test-coverage test/*.test.js",
     "prepare": "npm run build"
   },
   "keywords": [

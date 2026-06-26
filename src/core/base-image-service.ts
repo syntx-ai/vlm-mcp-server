@@ -2,6 +2,7 @@ import { ToolExecutionError } from './error-handler.js';
 import { createMultiModalMessage, createImageContent } from './api-common.js';
 import { fileService } from './file-service.js';
 import { chatService } from './chat-service.js';
+import { ApiError } from '../types/index.js';
 import type { ContentPart } from '../providers/types.js';
 
 /**
@@ -73,6 +74,9 @@ export class BaseImageAnalysisService {
             console.error(`${toolName} analysis failed`, {
                 error: error instanceof Error ? error.message : String(error)
             });
+            if (error instanceof ApiError) {
+                throw error;
+            }
             throw new ToolExecutionError(`${toolName} analysis failed: ${(error as Error).message}`, toolName, 'EXECUTION_ERROR', {
                 toolName,
                 operation: 'executeVisionAnalysis',
