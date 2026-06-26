@@ -174,11 +174,15 @@ export class EnvironmentService {
             console.warn('[important] API key not set but found ZAI_API_KEY, using it');
         }
         // Some users forget to replace the placeholder `your_api_key`.
+        const placeholderPatterns = [
+            'your_api_key', 'your-api-key', 'your api key',
+            '<api_key>', '<your_key>', '<your-api-key>',
+            'api_key_here', 'sk-placeholder', 'placeholder'
+        ];
         const looksLikePlaceholder = !apiKey
-            || apiKey.toLowerCase().includes('api')
-            || apiKey.toLowerCase().includes('key');
+            || placeholderPatterns.some(p => apiKey.toLowerCase().includes(p));
         if (looksLikePlaceholder) {
-            if (env.ANTHROPIC_AUTH_TOKEN && !env.ANTHROPIC_AUTH_TOKEN.toLowerCase().includes('api')) {
+            if (env.ANTHROPIC_AUTH_TOKEN && !placeholderPatterns.some(p => env.ANTHROPIC_AUTH_TOKEN!.toLowerCase().includes(p))) {
                 apiKey = env.ANTHROPIC_AUTH_TOKEN;
                 console.warn('[important] API key not set but found ANTHROPIC_AUTH_TOKEN, using it');
             }
